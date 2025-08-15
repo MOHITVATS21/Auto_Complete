@@ -2,6 +2,7 @@ package com.job_app.autocomplete.Service;
 
 import com.job_app.autocomplete.Model.Name;
 
+import com.job_app.autocomplete.Repository.NameRepository;
 import com.job_app.autocomplete.Service.Trie;
 import jakarta.annotation.PostConstruct;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -17,29 +18,24 @@ import java.nio.charset.StandardCharsets;
 public class TrieService {
     //private final NameRepository nameRepository;
     private final Trie trie;
+    private final NameRepository nameRepository;
 
-    public TrieService() {
-       // this.nameRepository = nameRepository;
+    public TrieService(NameRepository nameRepository) {
+
         this.trie = new Trie();
+        this.nameRepository = nameRepository;
     }
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void loadNamesIntoTrie() {
 
-        // Load from file
-        try (InputStream is = getClass().getResourceAsStream("/BoyNames.txt");
-             BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
 
-            String line;
-            while ((line = br.readLine()) != null) {
-                trie.insert(line.trim());
-            }
+        nameRepository.findAll().forEach(name -> {
+            trie.insert(name.getName());
+        });
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        System.out.println("✅ Trie loaded with names from file.");
+        System.out.println("✅ Trie loaded with names from DB.");
 
         System.out.println("Trie size: " + trie.getSize());
         System.out.println("Trie size calculated from nodes: " + trie.calculateSizeFromNodes());
