@@ -63,4 +63,9 @@ public class Trie {
         }
         return words;
     }
+
+    public List<String> getAllWords() {
+        return collectAllWords(root, "");
+    }
+
 }

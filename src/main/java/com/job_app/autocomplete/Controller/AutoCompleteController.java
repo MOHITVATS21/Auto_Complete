@@ -1,6 +1,7 @@
 package com.job_app.autocomplete.Controller;
 
 import com.job_app.autocomplete.Service.TrieService;
+import com.job_app.autocomplete.util.FuzzySearch;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,14 +18,23 @@ public class AutoCompleteController {
 
     @GetMapping
     public List<String> getSuggestions(@RequestParam String prefix) {
-        //return trieService.getTrie().getWordsStartingWith(prefix);
-        long start = System.nanoTime();
-        List<String> results = trieService.getTrie().getWordsStartingWith(prefix);
-        long end = System.nanoTime();
+        if (prefix == null || prefix.isEmpty()) {
+            throw new RuntimeException("Prefix cannot be null or empty");
+        }
 
-        System.out.println("Time taken: " + (end - start) + " ns");
+        // Step 1: Trie search
+        List<String> results = trieService.getTrie().getWordsStartingWith(prefix);
+
+        // Step 2: Fuzzy search fallback
+        if (results.isEmpty()) {
+            results = FuzzySearch.search(prefix, trieService.getTrie().getAllWords(), 2); // max edit distance 2
+        }
+
+        if (results.isEmpty()) {
+            throw new RuntimeException("No results found for the given prefix: " + prefix);
+        }
+
         return results;
-        //return trieService.getWordsStartingWith(prefix.toLowerCase());
     }
 
 
