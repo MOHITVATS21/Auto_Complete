@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.job_App</groupId>
     <artifactId>Auto-Complete</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1-SNAPSHOT</version>
     <name>Auto-Complete</name>
     <description>Auto-Complete</description>
     <url/>

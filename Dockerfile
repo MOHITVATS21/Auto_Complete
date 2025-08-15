@@ -6,7 +6,7 @@ LABEL authors="mohitvats"
 WORKDIR /app
 
 # Copy the Spring Boot fat JAR
-COPY target/Auto-Complete-0.0.1-SNAPSHOT.jar app.jar
+COPY target/Auto-Complete-1-SNAPSHOT.jar app.jar
 
 # Expose port your app uses
 EXPOSE 9090

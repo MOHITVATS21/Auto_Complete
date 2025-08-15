@@ -20,6 +20,7 @@ public class Trie {
         }
         if (!node.isEndOfWord) { // Word is new
             node.isEndOfWord = true;
+            node.originalWord = word;
             size++;
         }
     }
@@ -55,8 +56,11 @@ public class Trie {
 
     private List<String> collectAllWords(TrieNode node, String prefix) {
         List<String> words = new ArrayList<>();
+//        if (node.isEndOfWord) {
+//            words.add(prefix);
+//        }
         if (node.isEndOfWord) {
-            words.add(prefix);
+            words.add(node.originalWord); // return original case
         }
         for (char ch : node.children.keySet()) {
             words.addAll(collectAllWords(node.children.get(ch), prefix + ch));

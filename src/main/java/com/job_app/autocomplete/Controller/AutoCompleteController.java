@@ -1,5 +1,7 @@
 package com.job_app.autocomplete.Controller;
 
+import com.job_app.autocomplete.Exception.NoResultFoundException;
+import com.job_app.autocomplete.Exception.PrefixCannotbenull;
 import com.job_app.autocomplete.Service.TrieService;
 import com.job_app.autocomplete.util.FuzzySearch;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +21,7 @@ public class AutoCompleteController {
     @GetMapping
     public List<String> getSuggestions(@RequestParam String prefix) {
         if (prefix == null || prefix.isEmpty()) {
-            throw new RuntimeException("Prefix cannot be null or empty");
+            throw new PrefixCannotbenull("Prefix cannot be null or empty.");
         }
 
         // Step 1: Trie search
@@ -31,11 +33,12 @@ public class AutoCompleteController {
         }
 
         if (results.isEmpty()) {
-            throw new RuntimeException("No results found for the given prefix: " + prefix);
+            throw new NoResultFoundException("No results found for the given prefix.");
         }
 
         return results;
     }
+
 
 
 
